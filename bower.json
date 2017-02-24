@@ -1,7 +1,10 @@
 {
   "name": "event-planner-application",
   "authors": [
-    "Daniel Escobar"
+    "Daniel Escobar",
+    "Adrian Filipescu",
+    "Alin Peta",
+    "Valentin Jercalau"
   ],
   "private": true,
   "dependencies": {
