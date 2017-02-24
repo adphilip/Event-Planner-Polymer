@@ -35,6 +35,9 @@ Clone the repository from:
 $ git clone https://github.com/escobard/udacity-srwebdev-project1-event-signup.git
 ```
 
+$ git clone https://github.com/adphilip/Event-Planner-Polymer
+```
+
 Install NPM dependencies:
 ```
 $ npm install
