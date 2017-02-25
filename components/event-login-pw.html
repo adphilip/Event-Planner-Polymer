@@ -21,7 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: rgb(3, 140, 207);
+        background-color: rgb(255, 255, 255);
         transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 2;
         color: var(--paper-purple-50);
@@ -196,7 +196,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       signed-in="{{signedIn}}"
       user="{{user}}">
     </firebase-auth>
-    <paper-button id="signInPw" raised on-tap="openLogin">Connect</paper-button>
+    <!-- <paper-button id="signInPw" raised on-tap="openLogin">Click here to begin</paper-button> -->
+    <paper-icon-button id="startLion" src="../components/img/logo_start.png" style="width: 200px; height: 200px;" on-tap="openLogin"></paper-icon-button>
     <paper-dialog id="logIn" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
       <h1>Login</h1>
       <form is="iron-form" id="loginForm">

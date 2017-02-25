@@ -2,8 +2,11 @@
   <template>
 	<style include="note-app-shared-styles">
   .event-planner-0 {
-    width: 80%;
+    width: 90%;
     margin: 15px auto;
+    vertical-align: top;
+    border: 3px solid ##3f51b5;
+    float:right
   }
   :host {
     height: auto;
@@ -131,11 +134,18 @@
          
 	<!--  Docs: https://codelabs.developers.google.com/codelabs/polymer-firebase-pwa/index.html?index=..%2F..%2Findex#26
 	docs cont: https://github.com/PolymerLabs/note-app-elements/blob/master/na-note.html -->
-	<div class="notes">
-  		<template is="dom-repeat" items="[[persistedNotes]]" as="note">
-    		<event-planner
-        		id$="[[note.$key]]"
-        		title="[[note.title]]"
+
+  <div style="width:100%;"> 
+    <div style="float:left;">
+
+    <paper-date-picker date="April 21, 2015" force-narrow="true" style="background: #FF6200; height: 585px;"></paper-date-picker>
+
+    </div> 
+    <div class="notes">
+      <template is="dom-repeat" items="[[persistedNotes]]" as="note">
+        <event-planner
+            id$="[[note.$key]]"
+            title="[[note.title]]"
             host="[[note.host]]"
             eventtype="[[note.eventtype]]"
             startdate="[[note.startdate]]"
@@ -143,10 +153,10 @@
             location="[[note.location]]"
             guesttitle="[[note.guesttitle]]"
             guestlist="[[note.guestlist]]"
-        		on-tap="edit">
-    		</event-planner>
-  		</template>
-	</div>
+            on-tap="edit">
+        </event-planner>
+      </template>
+  </div>
 
   </template>
   <script>
