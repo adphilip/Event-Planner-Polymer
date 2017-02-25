@@ -22,7 +22,8 @@
     "gold-elements": "PolymerElements/gold-elements#1.0.0",
     "paper-elements": "PolymerElements/paper-elements#1.0.1",
     "note-app-elements": "polymerlabs/note-app-elements",
-    "polymerfire": "firebase/polymerfire#^0.10.3"
+    "polymerfire": "firebase/polymerfire#^0.10.3",
+    "paper-date-picker": "polymer-paper-datepicker#^1.2.0"
   },
   "devDependencies": {
     "web-component-tester": "^5.0.0"
