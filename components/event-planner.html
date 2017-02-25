@@ -2,6 +2,12 @@
 <dom-module id="event-planner">
   <template>
     <style>
+    google-map {
+      height: 200px;
+    }
+  </style>
+
+    <style>
       :host {
         display: block;
         box-sizing: border-box;
@@ -126,7 +132,7 @@
       #guestInfo {
           margin: 15px 0 10px;
       }
-      @media screen and (max-width: 750px) {
+      @media screen and (max-width: 850px) {
       .times {
           width: 100% !important;
       }
@@ -190,9 +196,7 @@
          class="times"
          name="eventstart"
          on-click="dateFocusedStart"
-         label="When is your event starting?" 
-         required
-         autovalidate
+         label="When is your event starting?"  
          value="{{dateStartValue}}"
          on-input="dateStartChange"
          pattern="[[dateStartPattern]]"
@@ -200,6 +204,8 @@
          placeholder="{{startdate}}" 
          bind-value="{{startdate}}">
         </paper-input>
+    <!-- autovalidate
+             required-->
         <paper-input
          type="datetime-local"
          id="eventEnd" 
@@ -207,7 +213,6 @@
          name="eventend"
          on-click="dateFocusedEnd"
          label="When is your event ending?" 
-         required
          value="{{dateEndValue}}"
          on-input="dateEndChange"
          pattern="[[dateEndPattern]]"
@@ -215,6 +220,7 @@
          placeholder="{{enddate}}" 
          bind-value="{{enddate}}">
         </paper-input>
+        <!--          required -->
       </fieldset>
       <paper-input
        type="text" 
@@ -229,6 +235,7 @@
        placeholder="{{guestlist}}" 
        bind-value="{{guestlist}}">
       </paper-input>
+
       <paper-input
        type="text"
        onFocus="geolocate" 
@@ -242,6 +249,15 @@
        placeholder="{{location}}" 
        bind-value="{{location}}">
       </paper-input>
+
+   <!--
+   <geo-location latitude="{{lat}}" longitude="{{lng}}" ></geo-location>
+   <google-map latitude="[[lat]]" longitude="[[lng]]" api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc"  fit-to-marker>
+   <google-map-marker latitude="[[lat]]" longitude="[[lng]]"></google-map-marker>
+   </google-map>
+   -->
+
+   </div> 
       <fieldset>
           <paper-checkbox id="guestInfo">
             <span>Check this to enter a guest message (optional)</span>
