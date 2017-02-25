@@ -138,11 +138,12 @@
   <div style="width:100%;"> 
     <div style="float:left;">
 
-    <paper-date-picker date="February 25, 2017" force-narrow="true" style="background: #FF6200; height: 585px;"></paper-date-picker>
+    <paper-date-picker id="testDiv" date="February 25, 2017" force-narrow="true" style="background: #FF6200; height: 585px;"></paper-date-picker>
 
     </div> 
     <div class="notes">
       <template is="dom-repeat" items="[[persistedNotes]]" as="note">
+      <div id="event-item" style="width: 100%;" hidden$="{{ishidden}}">
         <event-planner
             id$="[[note.$key]]"
             title="[[note.title]]"
@@ -153,8 +154,10 @@
             location="[[note.location]]"
             guesttitle="[[note.guesttitle]]"
             guestlist="[[note.guestlist]]"
-            on-tap="edit">
+            on-tap="edit"
+            >
         </event-planner>
+      </div>
       </template>
   </div>
 
@@ -162,6 +165,45 @@
   <script>
     Polymer({
       is: 'main-app',
+
+      properties: { 
+         ishidden: {
+             type: Boolean,
+             value: false
+         }
+       },
+       listeners: {
+         'hide-event': 'hideSlides'
+       },
+       hideSlides: function(e) {
+         this.ishidden = true;
+         alert("e");
+       },
+
+      /*listeners: {
+ +        'show-slides': 'handleSlides',
+ +        'hide-slides': 'hideSlides'
+ +      },*/
+      /*listeners: {
+         'hide-slides': function() {
+              alert("TEST9");
+          }
+     },*/
+     /*display: function(param1, param2) {
+       return false;
+     },
+     filterEvents: function() {
+      alert("test");
+     },*/
+
+     /*ready: function() {
+            alert("Hi Jquery");
+            var helloDiv = Polymer.dom(this.root).querySelector('#testDiv');
+            $(helloDiv).css("background-color", "yellow");
+     },*/
+     /*$('#testDiv').on('click', function () {
+        alert("testing");
+    });*/
 
       // more on this here: https://codelabs.developers.google.com/codelabs/polymer-firebase-pwa/index.html?index=..%2F..%2Findex#19
       // and here: https://github.com/PolymerLabs/note-app-elements/blob/master/na-behavior.html
