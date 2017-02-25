@@ -1,5 +1,12 @@
 <dom-module id="main-app">
   <template>
+  <style>
+
+  google-map {
+    height: 300px;
+  }
+  </style>
+
 	<style include="note-app-shared-styles">
   .event-planner-0 {
     width: 90%;
@@ -137,10 +144,23 @@
 
   <div style="width:100%;"> 
     <div style="float:left;">
+ 
+<!--
+   <paper-date-picker date="February 25, 2017" force-narrow="true" style="background: #FF6200; height: 85px;">   
+    </paper-date-picker> -->
 
-    <paper-date-picker id="testDiv" date="February 25, 2017" force-narrow="true" style="background: #FF6200; height: 585px;"></paper-date-picker>
-
+ 
+    <paper-date-picker style="background: #FF6200";>
+    </paper-date-picker>
+    <br> 
+    
+    
+   <geo-location latitude="{{lat}}" longitude="{{lng}}" ></geo-location>
+   <google-map latitude="[[lat]]" longitude="[[lng]]" api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc"  fit-to-marker>
+    <google-map-marker latitude="[[lat]]" longitude="[[lng]]"></google-map-marker>
+   </google-map>
     </div> 
+
     <div class="notes">
       <template is="dom-repeat" items="[[persistedNotes]]" as="note">
       <div id="event-item" style="width: 100%;" hidden$="{{ishidden}}">
@@ -154,13 +174,14 @@
             location="[[note.location]]"
             guesttitle="[[note.guesttitle]]"
             guestlist="[[note.guestlist]]"
+            latitude="[[lat]]" 
+            longitude="[[lng]]"
             on-tap="edit"
             >
         </event-planner>
       </div>
       </template>
   </div>
-
   </template>
   <script>
     Polymer({
