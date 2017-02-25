@@ -1,0 +1,54 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/l2t-paper-slider/l2t-paper-slider.html">
+<link rel"import" href="check-idle.html">
+
+<dom-module id="slide-images-button">
+  <template>
+    <style>
+        .overlay{
+        opacity: 1;
+        background-color:#ccc;
+        position:fixed;
+        width:100%;
+        height:100%;
+        top:0px;
+        left:0px;
+        z-index:1000;
+      }
+    </style>
+  
+    <div class="overlay" hidden$="{{ishidden}}">    
+      <check-idle idle-time=10></check-idle>
+
+      <l2t-paper-slider auto-progress slide-duration="3" class="custom" total-slides="3">
+        <paper-slide style="background-image: url('components/img/bar6.png');"></paper-slide>
+        <paper-slide style="background-image: url('components/img/bar5.png');"></paper-slide>
+        <paper-slide style="background-image: url('components/img/bar4.png');"></paper-slide>
+      </l2t-paper-slider>
+    </div>
+
+  </template>
+  
+  <script>
+    Polymer({
+      is: "slide-images-button",
+      properties: { 
+        ishidden: {
+            type: Boolean,
+            value: true
+        }
+      },
+      listeners: {
+        'show-slides': 'handleSlides',
+        'hide-slides': 'hideSlides'
+      },
+      handleSlides: function(e){
+        console.log(e.target.idleTime + 'was fiiired');
+        this.ishidden = false;
+      },
+      hideSlides: function(e) {
+        this.ishidden = true;
+      }
+    });
+  </script>
+</dom-module>

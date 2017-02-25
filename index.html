@@ -13,6 +13,11 @@
       sizes="512x512"
       href="components/img/calendar.png">
     <link rel="shortcut icon" type="image/png" href="components/img/calendar-favicon.png"/>
+
+    <link rel="import" href="bower_components/l2t-paper-slider/l2t-paper-slider.html">
+    <link rel="import" href="slide-images-button.html">
+    <link rel="import" href="check-idle.html">
+
     <style>
       body {
         margin:0;
@@ -26,9 +31,10 @@
         auth-domain="event-planner-e6ee3.firebaseapp.com"
         database-url="https://event-planner-e6ee3.firebaseio.com">
      </firebase-app>
+     
      <main-app></main-app>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtStNsFJnuTo2aG1-9mKf5T7OXEbchdpM&libraries=places&callback=initAutocomplete"
-        async defer></script>
+    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtStNsFJnuTo2aG1-9mKf5T7OXEbchdpM&libraries=places&callback=initAutocomplete"-->
+        <!--async defer></script>-->
     <script src="sw-register.js"></script>
   </body>
 </html>
