@@ -1,0 +1,48 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="check-idle">
+    <template>
+        <style>
+        </style>
+    </template>
+
+    <script>
+        Polymer({
+            is: "check-idle",
+            properties: {
+                idleTime: Number
+            },
+
+            ready: function () {
+                console.log(this.localName + '#' + this.idleTime + ' has local DOM initialized');
+                //this.dispatch();
+                var IDLE_TIMEOUT = this.idleTime; //seconds
+                var _idleSecondsCounter = 0;
+                document.onclick = function () {
+                    _idleSecondsCounter = 0;
+                };
+                document.onmousemove = function () {
+                    _idleSecondsCounter = 0;
+                };
+                document.onkeypress = function () {
+                    _idleSecondsCounter = 0;
+                };
+                window.setInterval(CheckIdleTime.bind(this), 1000);
+
+                function CheckIdleTime() {
+                    _idleSecondsCounter++;
+                    var oPanel = document.getElementById("SecondsUntilExpire");
+                    if (oPanel)
+                        oPanel.innerHTML = (IDLE_TIMEOUT - _idleSecondsCounter) + "";
+                    if (_idleSecondsCounter >= IDLE_TIMEOUT) {
+                        console.log("GOT TIMEOUT HERE !");
+                        this.fire('show-slides');
+                    } else {
+                        console.log("BACK ON IT");
+                        this.fire("hide-slides");
+                    }
+                }
+            }
+        });
+    </script>
+</dom-module>
