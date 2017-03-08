@@ -1,6 +1,6 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/l2t-paper-slider/l2t-paper-slider.html">
-<link rel"import" href="check-idle.html">
+<link rel="import" href="check-idle.html">
 
 <dom-module id="slide-images-button">
   <template>
@@ -17,7 +17,7 @@
       }
     </style>
   
-    <div class="overlay" hidden$="{{ishidden}}">    
+    <div class="overlay" hidden$="{{isHidden}}">
       <check-idle idle-time=10></check-idle>
 
       <l2t-paper-slider auto-progress slide-duration="3" class="custom" total-slides="3">
@@ -33,7 +33,7 @@
     Polymer({
       is: "slide-images-button",
       properties: { 
-        ishidden: {
+        isHidden: {
             type: Boolean,
             value: true
         }
@@ -43,11 +43,11 @@
         'hide-slides': 'hideSlides'
       },
       handleSlides: function(e){
-        console.log(e.target.idleTime + 'was fiiired');
-        this.ishidden = false;
+        console.log(e.target.idleTime + 'was fired');
+        this.isHidden = false;
       },
       hideSlides: function(e) {
-        this.ishidden = true;
+        this.isHidden = true;
       }
     });
   </script>
