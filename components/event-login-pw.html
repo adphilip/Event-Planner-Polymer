@@ -10,504 +10,541 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 <dom-module id="event-login-pw">
-  <template>
-    <style>
-    :required:focus {
-  box-shadow: 0  0 3px rgba(255,0,0,0.5); 
-}
-      :host {
-        position: absolute;
-        top: 52px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgb(255, 255, 255);
-        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 2;
-        color: var(--paper-purple-50);
-        @apply(--layout);
-        @apply(--layout-center-center);
-      }
-      :host([signed-in]) {
-        opacity: 0;
-        pointer-events: none;
-      }
-      paper-button > * {
-        vertical-align: middle;
-        text-transform: none;
-      }
-      ul {
-        list-style: none;
-        margin: 16px 0 0;
-        padding: 0;
-        text-align: center;
-      }
-      paper-button {
-        display: inline-block;
-        padding: 8px;
-        text-transform: uppercase;
-        text-decoration: none;
-        font-weight: 500;
-        background: rgb(3,155,229);
-        color: white;
-        border: 1px solid rgb(3,155,229);
-        border-radius: 3px;
-        font-size: 14px;
-        box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
-      }
-      fieldset {
-        display: block;
-        border: 0;
-      }
-      h1 {
-        white-space: initial;
-        text-align: center;
-      }
-      paper-dialog {
-      width: 700px;
-      }
-      label.style-scope.event-login-pw {
-          margin-top: 10px;
-          margin-bottom: 10px;
-          display: block;
-      }
-      paper-dialog paper-button {
-          width: 98%;
-          text-align: center;
-          margin: auto !important;
-          display: block !important;
-          float: none;
-      }
-      #signInRegistration {
-          text-align: center;
-      }
+    <template>
+        <style>
+            :required:focus {
+                box-shadow: 0 0 3px rgba(255, 0, 0, 0.5);
+            }
 
-      #signInRegistration span {
-          color: #039be5;
-          cursor: pointer;
-      }
-      #personalInfoContainer {
-          display: none;
-      }
-      #personalInfoContainer.active {
-          display: block;
-      }
-      #personalInfo {
-          margin: 10px 0;
-      }
-      .regPasswords {
-          width: 49%;
-          float: left;
-          margin: 0 1% 1% 0;
-      }
+            :host {
+                position: absolute;
+                top: 52px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgb(255, 255, 255);
+                transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 2;
+                color: var(--paper-purple-50);
+                @apply(--layout);
+                @apply(--layout-center-center);
+            }
 
-      #regSecondPass {
-          margin: 0 0 1% 1%;
-      }
-      fieldset.checkboxes {
-          display: block;
-          width: 46%;
-          float: left;
-      }
-      #signInPw {
-          font-size: 18px;
-          padding: 0.5% 1.5%;
-      }
-      #registerButton {
-        background: #ccc;
-        border: 0;
-      }
-      #registerButton.passValid {
-        background: rgb(3, 140, 207);
-      }
-      #loginButton {
-        background: #ccc;
-        border: 0;
-      }
-      #loginButton.passValid {
-        background: rgb(3, 140, 207);
-      }
-      #invalidLogin {
-          text-align: center;
-          width: 100%;
-          display: none;
-          margin: 10px 0;
-          font-size: 15px;
-          color: #dd2c00;
-      }
-      #invalidLogin.active {
-        display: block;
-      }
-      @media screen and (max-width: 750px) {
-      h1.event-login-pw {
-          font-size: 24px;
-          line-height: 28px;
-          margin: 10px 0;
-          padding: 0;
-      }
-      form {
-          margin: 0;
-          padding: 0 10px;
-      }
-      #signInPw {
-          padding: 10px 20px;
-      }
-      fieldset {
-          padding: 0;
-      }
+            :host([signed-in]) {
+                opacity: 0;
+                pointer-events: none;
+            }
 
-      paper-dialog {
-          z-index: 1;
-      }
+            paper-button > * {
+                vertical-align: middle;
+                text-transform: none;
+            }
 
-      .regPasswords {
-          width: 100%;
-          margin: 0;
-      }
-      .checkboxes {
-          width: 100% !important;
-      }
-      .paper-input-container-0 {
-          padding: 4px 0 0 0;
-      }
-      h3 {
-          display: none;
-      }
-      h2 {
-        white-space: normal;
-      }
-      #registrationForm {
-          overflow-y: scroll;
-      }
-      #registerButton {
-          margin: 15px 0 !important;
-      }
-      paper-dialog {
-            top: 24px;
-            overflow-y: scroll;
-            width:98%;
-            margin:1.5rem 0 !important;
-        }
-      }
-    </style>
-    <firebase-auth
-      id="auth"
-      app-name="event-planner"
-      signed-in="{{signedIn}}"
-      user="{{user}}">
-    </firebase-auth>
-    <!-- <paper-button id="signInPw" raised on-tap="openLogin">Click here to begin</paper-button> -->
-    <paper-icon-button id="startLion" src="../components/img/logo_start.png" style="width: 400px; height: 300px;" on-tap="openLogin"></paper-icon-button>
-    <paper-dialog id="logIn" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-      <h1>Login</h1>
-      <form is="iron-form" id="loginForm">
-        <fieldset>
-          <gold-email-input
-              id="loginEmail"
-              name="loginemail"
-              label="Enter your email to login" 
-              required 
-              autofocus
-              autocomplete="email" 
-              aria-disabled="false" 
-              bind-value="{[useremail]}" 
-              auto-validate 
-              error-message="Please enter a valid Email Address">
-          </gold-email-input>
-          <paper-input 
-             type="password" 
-             id="loginPassword" 
-             label="Enter your password to login" 
-             required
-             name="loginpass"
-             auto-validate
-             value="{{passvalue}}"
-             on-input="passchange"
-             pattern="[[passvalidate]]"
-             autocomplete="password" 
-             min-length="8"
-             error-message="Please enter a password matching the requirements"
-             char-counter>
-          </paper-input>
-          <span id="invalidLogin">Invalid login credentials!</span>
-        </fieldset>
-        <paper-button on-tap="signIn" id="loginButton" disabled>Connect</paper-button>
-        <p id="signInRegistration">Don't have an Account? <span id="accountReg" on-tap="openReg">Create Account</span></p>
-      </form>
-    </paper-dialog>
-    <paper-dialog id="registrationForm" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-      <form is="iron-form" id="regForm">
-        <fieldset class="regInput">
-         <h1>Register a new account</h1>
-         <paper-input 
-          type="text" 
-          id="regUserName"
-          name="nickname" 
-          label="Enter your name"
-          autocomplete="nickname"
-          pattern="[a-zA-Z]*\s*[a-zA-Z]*"
-          minlength="2"
-          required
-          autofocus
-          auto-validate
-          error-message="Please enter your name correctly - Only letters and a single space allowed">
-         </paper-input>
-         <gold-email-input
-          id="regEmail"
-          name="email"
-          label="Please enter your email" 
-          required 
-          autocomplete="email" 
-          bind-value="{[useremail]}" 
-          auto-validate 
-          error-message="Please enter a valid Email Address">
-         </gold-email-input>
-         <paper-input 
-         type="password" 
-         id="regPassword" 
-         class="regPasswords"
-         label="Please enter your password" 
-         required 
-         value="{{passvalue}}"
-         on-input="passchange"
-         pattern="[[passvalidate]]"
-         autocomplete="password" 
-         min-length="8"
-         auto-validate
-         error-message="Please enter a password matching the requirements"
-         char-counter>
-         </paper-input>
-         <paper-input 
-          type="password" 
-          id="regSecondPass" 
-          class="regPasswords"
-          name="password-confirm" 
-          label="Please confirm your password" 
-          required 
-          autocomplete="password" 
-          value="{{passconfirmValue}}"
-          on-input="passconfirmchange"
-          pattern="[[passconfirm]]"
-          auto-validate
-          error-message="Make sure both passwords match"
-          char-counter>
-          </paper-input>
-          <h3>Make sure your password fits all requirements:</h3>
-        </fieldset>
-        <fieldset class="regInput checkboxes">
-           <paper-checkbox
-            id="passwordLower"
-            invalid
-            disabled>
-            Must contain a lower case letter
-           </paper-checkbox>
-           <paper-checkbox
-            id="passwordUpper"
-            invalid
-            disabled>
-            Must contain an upper case letter
-           </paper-checkbox>
-           <paper-checkbox
-            id="passwordNumber"
-            invalid
-            disabled>
-            Must contain one number
-           </paper-checkbox>
-        </fieldset>
-        <fieldset class="regInput checkboxes">
-          <paper-checkbox
-            id="passwordSymbol"
-            invalid
-            disabled>
-            Must contain at least one symbol
-          </paper-checkbox>
-          <paper-checkbox
-            id="passwordMin"
-            invalid
-            disabled>
-            Must contain at least 8 characters
-          </paper-checkbox>
-          <paper-checkbox
-            id="passwordConfirmed"
-            invalid
-            disabled>
-            Make sure both passwords are the same
-          </paper-checkbox>
-        </fieldset>
-        <fieldset>
-          <paper-checkbox id="personalInfo">
-            <h2>Check to enter personal information (optional)</h2>
-          </paper-checkbox>
-        </fieldset>
-        <fieldset id="personalInfoContainer">
-          <paper-input
-           id="reg-occupation" 
-           name="occupation" 
-           label="What's your occupation?" 
-           autocomplete="organization-title">
-          </paper-input>
-          <paper-input 
-           name="birthday"
-           id="reg-birthday" 
-           type="date" 
-           label="When were you born?" 
-           autocomplete="bday">
-          </paper-input>
-          <paper-input 
-           name="appuse"
-           id="reg-appuse" 
-           type="text"
-           list="uses" 
-           label="How will you be using this application?">
-          </paper-input>
-          <datalist id="uses">
-            <option value="Confidential"></option>
-            <option value="Corporate"></option>
-            <option value="Educational"></option>
-            <option value="N/A"></option>
-            <option value="Other"></option>
-            <option value="Personal"></option>
-            <option value="Private Events"></option>
-            <option value="Recreation"></option>
-          </datalist>
-          <!--Make this a text box -->
-          <paper-input
-           name="streetaddress"
-           id="diff-geo-address" 
-           onFocus="geolocate" 
-           type="text" 
-           label="What's your street address?" 
-           autocomplete="street-address">
-          </paper-input>
-        </fieldset>
-        <paper-button on-tap="Register" id="registerButton" disabled>Click here to create your account</paper-button>
-    </form>
-  </paper-dialog>
-  <script type="text/javascript" src="js/app.js"></script>
-  
-  </template>
-  <script>
-    Polymer({
-      is: 'event-login-pw',
-      properties: {
-        disabled: {
-          type: Boolean,
-          reflectToAttribute: true,
-          value: false
-        },
-        signedIn: {
-          type: Boolean,
-          reflectToAttribute: true,
-          value: false
-        },
-        valueState: {
-          type: Object,
-          value: {
-          }
-        },
-        passvalue: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-        passvalidate: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-        passconfirm: {
-          type: String,
-          notify: true,
-          value: ''
-        }
-      },
-      signIn: function() {
-        var email = this.$.loginEmail.value;
-        var password = this.$.loginPassword.value;
-        var invalLogin = this.$.invalidLogin;;
-        this.$.auth.signInWithEmailAndPassword(email, password)
-        .then(function(){
-          console.log('Success, logged in!')
-        })
-        .catch(function(error){
-          invalLogin.classList.add('active')
-          console.log('Invalid login credentials!')
+            ul {
+                list-style: none;
+                margin: 16px 0 0;
+                padding: 0;
+                text-align: center;
+            }
+
+            paper-button {
+                display: inline-block;
+                padding: 8px;
+                text-transform: uppercase;
+                text-decoration: none;
+                font-weight: 500;
+                background: rgb(3, 155, 229);
+                color: white;
+                border: 1px solid rgb(3, 155, 229);
+                border-radius: 3px;
+                font-size: 14px;
+                box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
+            }
+
+            fieldset {
+                display: block;
+                border: 0;
+            }
+
+            h1 {
+                white-space: initial;
+                text-align: center;
+            }
+
+            paper-dialog {
+                width: 700px;
+            }
+
+            label.style-scope.event-login-pw {
+                margin-top: 10px;
+                margin-bottom: 10px;
+                display: block;
+            }
+
+            paper-dialog paper-button {
+                width: 98%;
+                text-align: center;
+                margin: auto !important;
+                display: block !important;
+                float: none;
+            }
+
+            #signInRegistration {
+                text-align: center;
+            }
+
+            #signInRegistration span {
+                color: #039be5;
+                cursor: pointer;
+            }
+
+            #personalInfoContainer {
+                display: none;
+            }
+
+            #personalInfoContainer.active {
+                display: block;
+            }
+
+            #personalInfo {
+                margin: 10px 0;
+            }
+
+            .regPasswords {
+                width: 49%;
+                float: left;
+                margin: 0 1% 1% 0;
+            }
+
+            #regSecondPass {
+                margin: 0 0 1% 1%;
+            }
+
+            fieldset.checkboxes {
+                display: block;
+                width: 46%;
+                float: left;
+            }
+
+            #signInPw {
+                font-size: 18px;
+                padding: 0.5% 1.5%;
+            }
+
+            #registerButton {
+                background: #ccc;
+                border: 0;
+            }
+
+            #registerButton.passValid {
+                background: rgb(3, 140, 207);
+            }
+
+            #loginButton {
+                background: #ccc;
+                border: 0;
+            }
+
+            #loginButton.passValid {
+                background: rgb(3, 140, 207);
+            }
+
+            #invalidLogin {
+                text-align: center;
+                width: 100%;
+                display: none;
+                margin: 10px 0;
+                font-size: 15px;
+                color: #dd2c00;
+            }
+
+            #invalidLogin.active {
+                display: block;
+            }
+
+            @media screen and (max-width: 750px) {
+                h1.event-login-pw {
+                    font-size: 24px;
+                    line-height: 28px;
+                    margin: 10px 0;
+                    padding: 0;
+                }
+
+                form {
+                    margin: 0;
+                    padding: 0 10px;
+                }
+
+                #signInPw {
+                    padding: 10px 20px;
+                }
+
+                fieldset {
+                    padding: 0;
+                }
+
+                paper-dialog {
+                    z-index: 1;
+                }
+
+                .regPasswords {
+                    width: 100%;
+                    margin: 0;
+                }
+
+                .checkboxes {
+                    width: 100% !important;
+                }
+
+                .paper-input-container-0 {
+                    padding: 4px 0 0 0;
+                }
+
+                h3 {
+                    display: none;
+                }
+
+                h2 {
+                    white-space: normal;
+                }
+
+                #registrationForm {
+                    overflow-y: scroll;
+                }
+
+                #registerButton {
+                    margin: 15px 0 !important;
+                }
+
+                paper-dialog {
+                    top: 24px;
+                    overflow-y: scroll;
+                    width: 98%;
+                    margin: 1.5rem 0 !important;
+                }
+            }
+        </style>
+        <firebase-auth
+                id="auth"
+                app-name="event-planner"
+                signed-in="{{signedIn}}"
+                user="{{user}}">
+        </firebase-auth>
+        <!-- <paper-button id="signInPw" raised on-tap="openLogin">Click here to begin</paper-button> -->
+        <paper-icon-button id="startLion" src="../components/img/logo_start.png" style="width: 400px; height: 300px;"
+                           on-tap="openLogin"></paper-icon-button>
+        <paper-dialog id="logIn" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+            <h1>Login</h1>
+            <form is="iron-form" id="loginForm">
+                <fieldset>
+                    <gold-email-input
+                            id="loginEmail"
+                            name="loginemail"
+                            label="Enter your email to login"
+                            required
+                            autofocus
+                            autocomplete="email"
+                            aria-disabled="false"
+                            bind-value="{[useremail]}"
+                            auto-validate
+                            error-message="Please enter a valid Email Address">
+                    </gold-email-input>
+                    <paper-input
+                            type="password"
+                            id="loginPassword"
+                            label="Enter your password to login"
+                            required
+                            name="loginpass"
+                            auto-validate
+                            value="{{passvalue}}"
+                            on-input="passchange"
+                            pattern="[[passvalidate]]"
+                            autocomplete="password"
+                            min-length="8"
+                            error-message="Please enter a password matching the requirements"
+                            char-counter>
+                    </paper-input>
+                    <span id="invalidLogin">Invalid login credentials!</span>
+                </fieldset>
+                <paper-button on-tap="signIn" id="loginButton" disabled>Connect</paper-button>
+                <p id="signInRegistration">Don't have an Account? <span id="accountReg"
+                                                                        on-tap="openReg">Create Account</span></p>
+            </form>
+        </paper-dialog>
+        <paper-dialog id="registrationForm" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+            <form is="iron-form" id="regForm">
+                <fieldset class="regInput">
+                    <h1>Register a new account</h1>
+                    <paper-input
+                            type="text"
+                            id="regUserName"
+                            name="nickname"
+                            label="Enter your name"
+                            autocomplete="nickname"
+                            pattern="[a-zA-Z]*\s*[a-zA-Z]*"
+                            minlength="2"
+                            required
+                            autofocus
+                            auto-validate
+                            error-message="Please enter your name correctly - Only letters and a single space allowed">
+                    </paper-input>
+                    <gold-email-input
+                            id="regEmail"
+                            name="email"
+                            label="Please enter your email"
+                            required
+                            autocomplete="email"
+                            bind-value="{[useremail]}"
+                            auto-validate
+                            error-message="Please enter a valid Email Address">
+                    </gold-email-input>
+                    <paper-input
+                            type="password"
+                            id="regPassword"
+                            class="regPasswords"
+                            label="Please enter your password"
+                            required
+                            value="{{passvalue}}"
+                            on-input="passchange"
+                            pattern="[[passvalidate]]"
+                            autocomplete="password"
+                            min-length="8"
+                            auto-validate
+                            error-message="Please enter a password matching the requirements"
+                            char-counter>
+                    </paper-input>
+                    <paper-input
+                            type="password"
+                            id="regSecondPass"
+                            class="regPasswords"
+                            name="password-confirm"
+                            label="Please confirm your password"
+                            required
+                            autocomplete="password"
+                            value="{{passconfirmValue}}"
+                            on-input="passconfirmchange"
+                            pattern="[[passconfirm]]"
+                            auto-validate
+                            error-message="Make sure both passwords match"
+                            char-counter>
+                    </paper-input>
+                    <h3>Make sure your password fits all requirements:</h3>
+                </fieldset>
+                <fieldset class="regInput checkboxes">
+                    <paper-checkbox
+                            id="passwordLower"
+                            invalid
+                            disabled>
+                        Must contain a lower case letter
+                    </paper-checkbox>
+                    <paper-checkbox
+                            id="passwordUpper"
+                            invalid
+                            disabled>
+                        Must contain an upper case letter
+                    </paper-checkbox>
+                    <paper-checkbox
+                            id="passwordNumber"
+                            invalid
+                            disabled>
+                        Must contain one number
+                    </paper-checkbox>
+                </fieldset>
+                <fieldset class="regInput checkboxes">
+                    <paper-checkbox
+                            id="passwordSymbol"
+                            invalid
+                            disabled>
+                        Must contain at least one symbol
+                    </paper-checkbox>
+                    <paper-checkbox
+                            id="passwordMin"
+                            invalid
+                            disabled>
+                        Must contain at least 8 characters
+                    </paper-checkbox>
+                    <paper-checkbox
+                            id="passwordConfirmed"
+                            invalid
+                            disabled>
+                        Make sure both passwords are the same
+                    </paper-checkbox>
+                </fieldset>
+                <fieldset>
+                    <paper-checkbox id="personalInfo">
+                        <h2>Check to enter personal information (optional)</h2>
+                    </paper-checkbox>
+                </fieldset>
+                <fieldset id="personalInfoContainer">
+                    <paper-input
+                            id="reg-occupation"
+                            name="occupation"
+                            label="What's your occupation?"
+                            autocomplete="organization-title">
+                    </paper-input>
+                    <paper-input
+                            name="birthday"
+                            id="reg-birthday"
+                            type="date"
+                            label="When were you born?"
+                            autocomplete="bday">
+                    </paper-input>
+                    <paper-input
+                            name="appuse"
+                            id="reg-appuse"
+                            type="text"
+                            list="uses"
+                            label="How will you be using this application?">
+                    </paper-input>
+                    <datalist id="uses">
+                        <option value="Confidential"></option>
+                        <option value="Corporate"></option>
+                        <option value="Educational"></option>
+                        <option value="N/A"></option>
+                        <option value="Other"></option>
+                        <option value="Personal"></option>
+                        <option value="Private Events"></option>
+                        <option value="Recreation"></option>
+                    </datalist>
+                    <!--Make this a text box -->
+                    <paper-input
+                            name="streetaddress"
+                            id="diff-geo-address"
+                            onFocus="geolocate"
+                            type="text"
+                            label="What's your street address?"
+                            autocomplete="street-address">
+                    </paper-input>
+                </fieldset>
+                <paper-button on-tap="Register" id="registerButton" disabled>Click here to create your account
+                </paper-button>
+            </form>
+        </paper-dialog>
+        <script type="text/javascript" src="js/app.js"></script>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'event-login-pw',
+            properties: {
+                disabled: {
+                    type: Boolean,
+                    reflectToAttribute: true,
+                    value: false
+                },
+                signedIn: {
+                    type: Boolean,
+                    reflectToAttribute: true,
+                    value: false
+                },
+                valueState: {
+                    type: Object,
+                    value: {}
+                },
+                passvalue: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                passvalidate: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                passconfirm: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                }
+            },
+            signIn: function () {
+                var email = this.$.loginEmail.value;
+                var password = this.$.loginPassword.value;
+                var invalLogin = this.$.invalidLogin;
+                ;
+                this.$.auth.signInWithEmailAndPassword(email, password)
+                    .then(function () {
+                        console.log('Success, logged in!')
+                    })
+                    .catch(function (error) {
+                        invalLogin.classList.add('active')
+                        console.log('Invalid login credentials!')
+                    });
+            },
+            Register: function () {
+                var email = this.$.regEmail.value;
+                var password = this.$.regPassword.value;
+                var invalReg = this.$.invalidReg;
+                this.$.auth.createUserWithEmailAndPassword(email, password)
+                    .then(function () {
+                        console.log('Success, account created!')
+                    })
+                    .catch(function (error) {
+                        invalReg.classList.add('active')
+                        console.log('Invalid registration values!')
+                    });
+            },
+            passchange: function () {
+                this.valueState.passvalue = this.passValidation();
+                this.passvalidate = this.valueState.passvalue ? this.passvalue : '';
+                this.passconfirm = this.passvalue;
+                this.$.regPassword.validate();
+                this.$.loginPassword.validate();
+            },
+            passconfirmchange: function () {
+                this.valueState.passconfirmvalue = this.passConfirmValidation();
+                this.$.regSecondPass.validate();
+            },
+            passValidation: function () {
+                var value = this.$.regPassword.value || this.$.loginPassword.value;
+                var passMin = this.$.passwordMin.checked = value.length >= 8;
+                var passLow = this.$.passwordLower.checked = /[a-z]/.test(value);
+                var passUpp = this.$.passwordUpper.checked = /[A-Z]/.test(value);
+                var passNum = this.$.passwordNumber.checked = /[0-9]/.test(value);
+                var passSym = this.$.passwordSymbol.checked = /[\+\=\&\^\%\'$'\#\@\!]/.test(value);
+                if (passMin && passLow && passUpp && passNum && passSym) {
+                    console.log('Passwords valid!');
+                    this.$.loginButton.classList.add('passValid');
+                    this.$.loginButton.removeAttribute('disabled');
+                } else {
+                    console.log('Passwords invalid!');
+                    this.$.loginButton.classList.remove('passValid');
+                    this.$.loginButton.setAttribute('disabled', '');
+                }
+                return passMin && passLow && passUpp && passNum && passSym;
+            },
+            passConfirmValidation: function () {
+                var value = this.$.regPassword.value || this.$.loginPassword.value;
+                var passconfirmValue = this.$.regSecondPass.value;
+                var passwordsMatch = value === passconfirmValue;
+                var passCon = this.$.passwordConfirmed.checked = passwordsMatch;
+                if (passCon) {
+                    console.log('Passwords valid!');
+                    this.$.registerButton.classList.add('passValid');
+                    this.$.registerButton.removeAttribute('disabled');
+                } else {
+                    console.log('Passwords invalid!');
+                    this.$.registerButton.classList.remove('passValid')
+                    this.$.registerButton.setAttribute('disabled', '')
+                }
+                return passCon;
+            },
+            loginValidation: function () {
+                if ($.loginPassword.value.isValid && $.loginEmail.value.isValid) {
+                    console.log('Login credentials valid!')
+                } else {
+                    console.log('Login credentials invalid!')
+                }
+            },
+            openLogin: function () {
+                var element = document.querySelector('#logIn');
+                element.toggle();
+            },
+            openReg: function () {
+                var element = document.querySelector('#registrationForm');
+                element.toggle();
+            }
         });
-      },
-      Register: function () {
-        var email = this.$.regEmail.value;
-        var password = this.$.regPassword.value;
-        var invalReg = this.$.invalidReg;
-        this.$.auth.createUserWithEmailAndPassword(email, password)
-        .then(function(){
-          console.log('Success, account created!')
-        })
-        .catch(function(error){
-          invalReg.classList.add('active')
-          console.log('Invalid registration values!')
-        });
-      },
-      passchange: function (){
-        this.valueState.passvalue = this.passValidation();
-        this.passvalidate = this.valueState.passvalue ? this.passvalue : '';
-        this.passconfirm = this.passvalue;
-        this.$.regPassword.validate();
-        this.$.loginPassword.validate();
-      },
-      passconfirmchange: function(){
-        this.valueState.passconfirmvalue = this.passConfirmValidation();
-        this.$.regSecondPass.validate();
-      },
-      passValidation: function (){
-        var value = this.$.regPassword.value || this.$.loginPassword.value;
-        var passMin = this.$.passwordMin.checked = value.length >= 8;
-        var passLow = this.$.passwordLower.checked = /[a-z]/.test(value);
-        var passUpp = this.$.passwordUpper.checked = /[A-Z]/.test(value);
-        var passNum = this.$.passwordNumber.checked = /[0-9]/.test(value);
-        var passSym = this.$.passwordSymbol.checked = /[\+\=\&\^\%\'$'\#\@\!]/.test(value);
-        if (passMin && passLow && passUpp && passNum && passSym) {
-          console.log('Passwords valid!');
-          this.$.loginButton.classList.add('passValid');
-          this.$.loginButton.removeAttribute('disabled');
-        } else {
-          console.log('Passwords invalid!');
-          this.$.loginButton.classList.remove('passValid');
-          this.$.loginButton.setAttribute('disabled', '');
-        }
-        return passMin && passLow && passUpp && passNum && passSym ;
-        },
-      passConfirmValidation: function (){
-        var value = this.$.regPassword.value || this.$.loginPassword.value;
-        var passconfirmValue = this.$.regSecondPass.value;
-        var passwordsMatch = value === passconfirmValue;
-        var passCon = this.$.passwordConfirmed.checked = passwordsMatch;
-        if (passCon) {
-            console.log('Passwords valid!');
-            this.$.registerButton.classList.add('passValid');
-            this.$.registerButton.removeAttribute('disabled');
-        } else{
-          console.log('Passwords invalid!');
-          this.$.registerButton.classList.remove('passValid')
-          this.$.registerButton.setAttribute('disabled','')
-        }
-        return passCon;
-      },
-      loginValidation: function (){
-        if ($.loginPassword.value.isValid && $.loginEmail.value.isValid) {
-          console.log('Login credentials valid!')
-        } else {
-          console.log('Login credentials invalid!')
-        }
-      },
-      openLogin: function(){
-        var element = document.querySelector('#logIn');
-        element.toggle();
-      },
-      openReg: function(){
-        var element = document.querySelector('#registrationForm');
-        element.toggle();
-      }
-    });
-  </script>
+    </script>
 
 </dom-module>

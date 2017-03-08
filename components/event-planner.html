@@ -1,432 +1,451 @@
-
 <dom-module id="event-planner">
-  <template>
-    <style>
-    google-map {
-      height: 200px;
-    }
-  </style>
+    <template>
+        <style>
+            google-map {
+                height: 200px;
+            }
+        </style>
 
-    <style>
-      :host {
-        display: block;
-        box-sizing: border-box;
-        background-color: #fafafa;
-        color: #212121;
-        padding: 1em;
-        text-align: center;
-        @apply(--paper-font-common-base);
-        @apply(--shadow-elevation-2dp);
-        border-radius: 2px;
-        --iron-autogrow-textarea: {
-          margin: 0;
-          padding: 0;
-          font-family: 'Roboto Slab', Times New Roman, serif;
-          white-space: pre-wrap;
-        }
-      }
-      
-      iron-autogrow-textarea {
-        display: block;
-        box-sizing: border-box;
-        width: 100%;
-        border: 0;
-        margin: 1em 0 0;
-        padding: 0;
-        font-size: 0.9em;
-        font-family: 'Roboto Slab', Times New Roman, serif;
-      }
-      .hidden {
-        display: none;
-      }
-      h1 {
-        font-size: 2em;
-        margin: 0;
-        white-space: pre-wrap;
-      }
-      h1:not(.hidden)+p {
-        margin-top: 1em;
-      }
-      h1 span {
-        color: #4CAF50;
-      }
-      h2 {
-          font-style: italic;
-          font-weight: 400;
-      }
-      h2 span {
-         color: #3F51B5;
-         font-weight: bold;
-      }
-      p {
-        margin: 0;
-        font-family: 'Roboto Slab', Times New Roman, serif;
-        font-size: 0.9em;
-        white-space: pre-wrap;
-      }
-      .placeholder:after {
-        content: 'Tap to edit';
-        opacity: 0.5;
-      }
-      .hidden {
-        display: none;
-      }
-      .empty {
-        font-style: italic;
-        color: #737373;
-        line-height: 0;
-        pointer-events: none;
-      }
-      input {
-        display: block;
-        box-sizing: border-box;
-        width: 100%;
-        margin: 0;
-        outline: none;
-        border: 0;
-        background: transparent;
-        white-space: pre-wrap;
-        font-family: 'Roboto', 'Noto', sans-serif;
-        font-size: 1.15em;
-        font-weight: bold;
-        color: #212121;
-      }
-      paper-input.times {
-          float: left;
-          width: 48%;
-      }
-      paper-input#event-end {
-          float: right;
-          margin-right: 0;
-      }
-      fieldset {
-          margin: 0;
-          padding: 0;
-          border: 0;
-      }
-      .type {
-          font-weight: bold;
-          color: #FF9800;
-      }
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+                background-color: #fafafa;
+                color: #212121;
+                padding: 1em;
+                text-align: center;
+                @apply(--paper-font-common-base);
+                @apply(--shadow-elevation-2dp);
+                border-radius: 2px;
+                --iron-autogrow-textarea: {
+                    margin: 0;
+                    padding: 0;
+                    font-family: 'Roboto Slab', Times New Roman, serif;
+                    white-space: pre-wrap;
+                }
+            }
 
-      .location {
-          color: #009688;
-          font-weight: bold;
-      }
+            iron-autogrow-textarea {
+                display: block;
+                box-sizing: border-box;
+                width: 100%;
+                border: 0;
+                margin: 1em 0 0;
+                padding: 0;
+                font-size: 0.9em;
+                font-family: 'Roboto Slab', Times New Roman, serif;
+            }
 
-      .startdate {
-          font-weight: bold;
-          color: #03A9F4;
-      }
+            .hidden {
+                display: none;
+            }
 
-      .endate {
-          font-weight: bold;
-          color: #3F51B5;
-      }
-      #eventOptionalContainer {
-          display: none;
-      }
-      #eventOptionalContainer.active {
-          display: block;
-      }
-      #guestInfo {
-          margin: 15px 0 10px;
-      }
-      @media screen and (max-width: 850px) {
-      .times {
-          width: 100% !important;
-      }
+            h1 {
+                font-size: 2em;
+                margin: 0;
+                white-space: pre-wrap;
+            }
 
-}
-    </style>
-    <template is="dom-if" if="[[editable]]" id="eForm">
-    <form is="iron-form" method="get" action="/" id="eventForm">
-      <paper-input 
-       type="text" 
-       id="event-title" 
-       label="What's your event called?" 
-       name="eventtitle"
-       required
-       minlength="3"
-       auto-validate
-       autofocus
-       pattern="[a-zA-Z0-9\s*]*"
-       error-message="Must be longer than 3 characters, be alphanumerical and spaces"
-       placeholder="{{title}}" 
-       bind-value="{{title}}">
-      </paper-input>
-      <paper-input
-       type="text" 
-       id="event-subtitle" 
-       name="eventsubtitle"
-       label="Who is hosting this event?" 
-       required
-       auto-validate
-       minlength="3"
-       pattern="[a-zA-Z\s*]*"
-       error-message="Must be longer than 3 characters, be alphanumerical and spaces"
-       placeholder="{{host}}" 
-       bind-value="{{host}}">
-      </paper-input>
-      <paper-input
-       type="text"
-       id="event-type" 
-       name="eventtype"
-       required
-       list="eventtypes"
-       auto-validate
-       min-length="3"
-       pattern="[a-zA-Z\s*]*"
-       error-message="Select an event type or enter an event type that can only contain letters and spaces"
-       label="What kind of event is this?" 
-       placeholder="{{eventtype}}" 
-       bind-value="{{eventtype}}">
-      </paper-input>
-      <datalist id="eventtypes">
-        <option value="Birthday"></option>
-        <option value="Corporate Event"></option>
-        <option value="Personal Event"></option>
-        <option value="Wedding"></option>
-        <option value="Other Event"></option>
-      </datalist>
-      <fieldset id="TEST">
-        <paper-input
-         type="datetime-local" 
-         id="eventStart" 
-         class="times"
-         name="eventstart"
-         on-click="dateFocusedStart"
-         label="When is your event starting?"  
-         value="{{dateStartValue}}"
-         on-input="dateStartChange"
-         pattern="[[dateStartPattern]]"
-         error-message="Date must be in the present and contain valid characters"
-         placeholder="{{startdate}}" 
-         bind-value="{{startdate}}">
-        </paper-input>
-    <!-- autovalidate
-             required-->
-        <paper-input
-         type="datetime-local"
-         id="eventEnd" 
-         class="times"
-         name="eventend"
-         on-click="dateFocusedEnd"
-         label="When is your event ending?" 
-         value="{{dateEndValue}}"
-         on-input="dateEndChange"
-         pattern="[[dateEndPattern]]"
-         error-message="Date must be greater than start date"
-         placeholder="{{enddate}}" 
-         bind-value="{{enddate}}">
-        </paper-input>
-        <!--          required -->
-      </fieldset>
-      <paper-input
-       type="text" 
-       name="guestlist"
-       id="event-guest-list" 
-       label="Who will be attending this event? (enter guest names separated by commas)" 
-       required
-       auto-validate
-       pattern="[a-zA-Z\/,\s*]*"
-       minlength="3"
-       error-message="Must be alphanumerical and may contain spaces or commas"
-       placeholder="{{guestlist}}" 
-       bind-value="{{guestlist}}">
-      </paper-input>
+            h1:not(.hidden) + p {
+                margin-top: 1em;
+            }
 
-      <paper-input
-       type="text"
-       onFocus="geolocate" 
-       id="event-address" 
-       name="eventaddress"
-       minlength="10"
-       required
-       auto-validate
-       error-message="Please enter a valid address"
-       label="Where will your event take place?" 
-       placeholder="{{location}}" 
-       bind-value="{{location}}">
-      </paper-input>
+            h1 span {
+                color: #4CAF50;
+            }
 
-   <!--
-   <geo-location latitude="{{lat}}" longitude="{{lng}}" ></geo-location>
-   <google-map latitude="[[lat]]" longitude="[[lng]]" api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc"  fit-to-marker>
-   <google-map-marker latitude="[[lat]]" longitude="[[lng]]"></google-map-marker>
-   </google-map>
-   -->
+            h2 {
+                font-style: italic;
+                font-weight: 400;
+            }
 
-   </div> 
-      <fieldset>
-          <paper-checkbox id="guestInfo">
-            <span>Check this to enter a guest message (optional)</span>
-          </paper-checkbox>
-      </fieldset>
-      <fieldset id="eventOptionalContainer">
-      <paper-input
-       type="text-area" 
-       name="guestmessage"
-       id="event-guest-message" 
-       label="Do you have a message for your guests? (optional)" 
-       placeholder="{{guestmessage}}" 
-       bind-value="{{guestmessage}}">
-      </paper-input>
-      </fieldset>
-  <div class="output"></div>
-</form>
+            h2 span {
+                color: #3F51B5;
+                font-weight: bold;
+            }
+
+            p {
+                margin: 0;
+                font-family: 'Roboto Slab', Times New Roman, serif;
+                font-size: 0.9em;
+                white-space: pre-wrap;
+            }
+
+            .placeholder:after {
+                content: 'Tap to edit';
+                opacity: 0.5;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            .empty {
+                font-style: italic;
+                color: #737373;
+                line-height: 0;
+                pointer-events: none;
+            }
+
+            input {
+                display: block;
+                box-sizing: border-box;
+                width: 100%;
+                margin: 0;
+                outline: none;
+                border: 0;
+                background: transparent;
+                white-space: pre-wrap;
+                font-family: 'Roboto', 'Noto', sans-serif;
+                font-size: 1.15em;
+                font-weight: bold;
+                color: #212121;
+            }
+
+            paper-input.times {
+                float: left;
+                width: 48%;
+            }
+
+            paper-input#event-end {
+                float: right;
+                margin-right: 0;
+            }
+
+            fieldset {
+                margin: 0;
+                padding: 0;
+                border: 0;
+            }
+
+            .type {
+                font-weight: bold;
+                color: #FF9800;
+            }
+
+            .location {
+                color: #009688;
+                font-weight: bold;
+            }
+
+            .startdate {
+                font-weight: bold;
+                color: #03A9F4;
+            }
+
+            .endate {
+                font-weight: bold;
+                color: #3F51B5;
+            }
+
+            #eventOptionalContainer {
+                display: none;
+            }
+
+            #eventOptionalContainer.active {
+                display: block;
+            }
+
+            #guestInfo {
+                margin: 15px 0 10px;
+            }
+
+            @media screen and (max-width: 850px) {
+                .times {
+                    width: 100% !important;
+                }
+
+            }
+        </style>
+        <template is="dom-if" if="[[editable]]" id="eForm">
+            <form is="iron-form" method="get" action="/" id="eventForm">
+                <paper-input
+                        type="text"
+                        id="event-title"
+                        label="What's your event called?"
+                        name="eventtitle"
+                        required
+                        minlength="3"
+                        auto-validate
+                        autofocus
+                        pattern="[a-zA-Z0-9\s*]*"
+                        error-message="Must be longer than 3 characters, be alphanumerical and spaces"
+                        placeholder="{{title}}"
+                        bind-value="{{title}}">
+                </paper-input>
+                <paper-input
+                        type="text"
+                        id="event-subtitle"
+                        name="eventsubtitle"
+                        label="Who is hosting this event?"
+                        required
+                        auto-validate
+                        minlength="3"
+                        pattern="[a-zA-Z\s*]*"
+                        error-message="Must be longer than 3 characters, be alphanumerical and spaces"
+                        placeholder="{{host}}"
+                        bind-value="{{host}}">
+                </paper-input>
+                <paper-input
+                        type="text"
+                        id="event-type"
+                        name="eventtype"
+                        required
+                        list="eventtypes"
+                        auto-validate
+                        min-length="3"
+                        pattern="[a-zA-Z\s*]*"
+                        error-message="Select an event type or enter an event type that can only contain letters and spaces"
+                        label="What kind of event is this?"
+                        placeholder="{{eventtype}}"
+                        bind-value="{{eventtype}}">
+                </paper-input>
+                <datalist id="eventtypes">
+                    <option value="Birthday"></option>
+                    <option value="Corporate Event"></option>
+                    <option value="Personal Event"></option>
+                    <option value="Wedding"></option>
+                    <option value="Other Event"></option>
+                </datalist>
+                <fieldset id="TEST">
+                    <paper-input
+                            type="datetime-local"
+                            id="eventStart"
+                            class="times"
+                            name="eventstart"
+                            on-click="dateFocusedStart"
+                            label="When is your event starting?"
+                            value="{{dateStartValue}}"
+                            on-input="dateStartChange"
+                            pattern="[[dateStartPattern]]"
+                            error-message="Date must be in the present and contain valid characters"
+                            placeholder="{{startdate}}"
+                            bind-value="{{startdate}}">
+                    </paper-input>
+                    <!-- autovalidate
+                             required-->
+                    <paper-input
+                            type="datetime-local"
+                            id="eventEnd"
+                            class="times"
+                            name="eventend"
+                            on-click="dateFocusedEnd"
+                            label="When is your event ending?"
+                            value="{{dateEndValue}}"
+                            on-input="dateEndChange"
+                            pattern="[[dateEndPattern]]"
+                            error-message="Date must be greater than start date"
+                            placeholder="{{enddate}}"
+                            bind-value="{{enddate}}">
+                    </paper-input>
+                    <!--          required -->
+                </fieldset>
+                <paper-input
+                        type="text"
+                        name="guestlist"
+                        id="event-guest-list"
+                        label="Who will be attending this event? (enter guest names separated by commas)"
+                        required
+                        auto-validate
+                        pattern="[a-zA-Z\/,\s*]*"
+                        minlength="3"
+                        error-message="Must be alphanumerical and may contain spaces or commas"
+                        placeholder="{{guestlist}}"
+                        bind-value="{{guestlist}}">
+                </paper-input>
+
+                <paper-input
+                        type="text"
+                        onFocus="geolocate"
+                        id="event-address"
+                        name="eventaddress"
+                        minlength="10"
+                        required
+                        auto-validate
+                        error-message="Please enter a valid address"
+                        label="Where will your event take place?"
+                        placeholder="{{location}}"
+                        bind-value="{{location}}">
+                </paper-input>
+
+                <!--
+                <geo-location latitude="{{lat}}" longitude="{{lng}}" ></geo-location>
+                <google-map latitude="[[lat]]" longitude="[[lng]]" api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc"  fit-to-marker>
+                <google-map-marker latitude="[[lat]]" longitude="[[lng]]"></google-map-marker>
+                </google-map>
+                -->
+
+                </div>
+                <fieldset>
+                    <paper-checkbox id="guestInfo">
+                        <span>Check this to enter a guest message (optional)</span>
+                    </paper-checkbox>
+                </fieldset>
+                <fieldset id="eventOptionalContainer">
+                    <paper-input
+                            type="text-area"
+                            name="guestmessage"
+                            id="event-guest-message"
+                            label="Do you have a message for your guests? (optional)"
+                            placeholder="{{guestmessage}}"
+                            bind-value="{{guestmessage}}">
+                    </paper-input>
+                </fieldset>
+                <div class="output"></div>
+            </form>
+        </template>
+
+        <!--  if is not editable-->
+        <template is="dom-if" if="[[!editable]]">
+            <h1 class$="[[emptyClass(title)]]"><span>{{title}}</span></h1>
+            <h2 class$="[[emptyClass(host)]]">Hosted by: <span>{{host}}</span></h2>
+            <p class$="[[emptyClass(eventtype)]]">This event is a <span class="type">{{eventtype}}</span>, located at
+                <span class="location">{{location}}.</span><br>
+                This event starts at: <span class="startdate">{{startdate}}</span> and ends at: <span class="endate">{{enddate}}</span>.
+            </p>
+            <p class$="[[emptyClass(location)]]"></p>
+            <br>
+            <share-buttons></share-buttons>
+
+        </template>
+        <script type="text/javascript" src="js/app.js"></script>
     </template>
-
-    <!--  if is not editable-->
-    <template is="dom-if" if="[[!editable]]">
-      <h1 class$="[[emptyClass(title)]]"><span>{{title}}</span></h1>
-      <h2 class$="[[emptyClass(host)]]">Hosted by: <span>{{host}}</span></h2>
-      <p class$="[[emptyClass(eventtype)]]">This event is a <span class="type">{{eventtype}}</span>, located at <span class="location">{{location}}.</span><br>
-      This event starts at: <span class="startdate">{{startdate}}</span> and ends at: <span class="endate">{{enddate}}</span>.</p>
-      <p class$="[[emptyClass(location)]]"></p>
-      <br>
-      <share-buttons></share-buttons>
-
-    </template>
-    <script type="text/javascript" src="js/app.js"></script>
-  </template>
-  <script>
-    Polymer({
-      is: 'event-planner',
-      properties: {
-        editable: {
-          type: Boolean,
-          reflectToAttribute: true,
-          value: false
-        },
-        valueState: {
-          type: Object,
-          value: {
-          }
-        },
-        note: {
-          type: Object,
-          notify: true
-        },
-        opened: {
-          type: Boolean,
-          reflectToAttribute: true,
-          readOnly: true,
-          value: false
-        },
-        title: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-        host: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-        eventtype: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-        startdate: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-        enddate: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-        location: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-        guestmessage: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-        guestlist: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-        dateStartValue: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-        dateStartPattern: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-        dateEndValue: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-        dateEndPattern: {
-          type: String,
-          notify: true,
-          value: ''
-        },
-      },
-      emptyClass : function (content) {
-        return !content ? 'hidden' : '';
-      },
-      propertiesAreEmpty: function() {
-        for (var i = 0; i < arguments.length; ++i) {
-          if (arguments[i]) {
-            return false;
-          }
-        }
-        return true;
-      },
-      dateFocusedStart: function(){
-        var dateStart = Polymer.dom(this.root).querySelector('#eventStart');
-        dateStart.setAttribute("invalid", "");
-      },
-      dateFocusedEnd: function(){
-        var dateEnd = Polymer.dom(this.root).querySelector('#eventEnd');
-        dateEnd.setAttribute("invalid", "");
-      },
-      dateStartChange: function (){
-        var dateStart = Polymer.dom(this.root).querySelector('#eventStart');
-        this.valueState.dateStartValue = this.dateStartValidation();
-        this.dateStartPattern = this.valueState.dateStartValue ? this.dateStartValue :'';
-      },
-      dateEndChange: function (){
-        var dateEnd = Polymer.dom(this.root).querySelector('#eventEnd');
-        this.valueState.dateEndValue = this.dateEndValidation();
-        this.dateEndPattern = this.valueState.dateEndValue ? this.dateEndValue :'';
-      },
-      dateStartValidation: function (){
-        var dateStart = Polymer.dom(this.root).querySelector('#eventStart');
-        var currentDate = new Date();
-        var enteredDate = new Date(dateStart.value);
-        if (enteredDate > currentDate) {
-          console.log('DATE VALID!');
-          dateStart.validate();
-        } else {
-          console.log('DATE INVALID!');
-        }
-      },
-      dateEndValidation: function (){
-        var dateEnd = Polymer.dom(this.root).querySelector('#eventEnd');
-        var dateStart = Polymer.dom(this.root).querySelector('#eventStart');
-        var enteredDateStart = new Date(dateStart.value);
-        var enteredDateEnd = new Date(dateEnd.value);
-        if (enteredDateStart < enteredDateEnd) {
-          console.log('DATE VALID!');
-          dateEnd.validate();
-        } else {
-          console.log('DATE INVALID!');
-        }
-      }
-    })
-  </script>
+    <script>
+        Polymer({
+            is: 'event-planner',
+            properties: {
+                editable: {
+                    type: Boolean,
+                    reflectToAttribute: true,
+                    value: false
+                },
+                valueState: {
+                    type: Object,
+                    value: {}
+                },
+                note: {
+                    type: Object,
+                    notify: true
+                },
+                opened: {
+                    type: Boolean,
+                    reflectToAttribute: true,
+                    readOnly: true,
+                    value: false
+                },
+                title: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                host: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                eventtype: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                startdate: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                enddate: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                location: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                guestmessage: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                guestlist: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                dateStartValue: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                dateStartPattern: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                dateEndValue: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                dateEndPattern: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+            },
+            emptyClass: function (content) {
+                return !content ? 'hidden' : '';
+            },
+            propertiesAreEmpty: function () {
+                for (var i = 0; i < arguments.length; ++i) {
+                    if (arguments[i]) {
+                        return false;
+                    }
+                }
+                return true;
+            },
+            dateFocusedStart: function () {
+                var dateStart = Polymer.dom(this.root).querySelector('#eventStart');
+                dateStart.setAttribute("invalid", "");
+            },
+            dateFocusedEnd: function () {
+                var dateEnd = Polymer.dom(this.root).querySelector('#eventEnd');
+                dateEnd.setAttribute("invalid", "");
+            },
+            dateStartChange: function () {
+                var dateStart = Polymer.dom(this.root).querySelector('#eventStart');
+                this.valueState.dateStartValue = this.dateStartValidation();
+                this.dateStartPattern = this.valueState.dateStartValue ? this.dateStartValue : '';
+            },
+            dateEndChange: function () {
+                var dateEnd = Polymer.dom(this.root).querySelector('#eventEnd');
+                this.valueState.dateEndValue = this.dateEndValidation();
+                this.dateEndPattern = this.valueState.dateEndValue ? this.dateEndValue : '';
+            },
+            dateStartValidation: function () {
+                var dateStart = Polymer.dom(this.root).querySelector('#eventStart');
+                var currentDate = new Date();
+                var enteredDate = new Date(dateStart.value);
+                if (enteredDate > currentDate) {
+                    console.log('DATE VALID!');
+                    dateStart.validate();
+                } else {
+                    console.log('DATE INVALID!');
+                }
+            },
+            dateEndValidation: function () {
+                var dateEnd = Polymer.dom(this.root).querySelector('#eventEnd');
+                var dateStart = Polymer.dom(this.root).querySelector('#eventStart');
+                var enteredDateStart = new Date(dateStart.value);
+                var enteredDateEnd = new Date(dateEnd.value);
+                if (enteredDateStart < enteredDateEnd) {
+                    console.log('DATE VALID!');
+                    dateEnd.validate();
+                } else {
+                    console.log('DATE INVALID!');
+                }
+            }
+        })
+    </script>
 </dom-module>

@@ -9,190 +9,211 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <dom-module id="event-planner-editor">
-  <template>
-    <style>
-      :host {
-        display: none;
-        position: absolute;
-        overflow: hidden;
-        top: 46px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 1;
-        min-height: 110%;
-        height: auto;
-      }
-      :host([opened]) {
-        display: block;
-      }
-      :host(.open) {
-        background-color: rgb(255, 98, 0);
-      }
-      paper-button {
-        color: var(--paper-purple-50);
-      }
-      #background {
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 10px;
-        border-radius: 512px;
-        width: 190px;
-        height: 190px;
-        background-image: url("img/inside.png");
-        background-color: rgb(255, 255, 255);
-        transform-origin: 128px 128px;
-      }
-      event-planner {
-        display: block;
-        position: absolute;
-        top: 0px;
-        left: 0px;
-      }
-      :host(.open) event-planner {
-        position: relative;
-        margin: auto;
-        width: calc(100vw - 20px);
-        max-width: 480px;
-      }
-      .controls {
-        display: block;
-        position: relative;
-        margin: 10px auto;
-        width: calc(100vw - 20px);
-        max-width: 480px;
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        justify-content: space-between;
-        transition: opacity 0.3s;
-        opacity: 0;
-      }
-      :host(.open) .controls {
-        opacity: 1;
-      }
-      .event-planner-editor {
-          text-align: left;
-      }
-      @media screen and (max-width: 750px) {
-          #note {
-          padding: 0 20px 1px 20px;
-      }
-    }
-    </style>
-    <div id="background"></div>
-    <event-planner id="note" title="{{note.title}}" host="{{note.host}}" eventtype="{{note.eventtype}}" startdate="{{note.startdate}}" enddate="{{note.enddate}}" location="{{note.location}}" guestmessage="{{note.guestmessage}}" guestlist="{{note.guestlist}}" editable></event-planner>
-    <div class="controls">
-      <paper-button raised on-tap="delete">Delete</paper-button>
-      <paper-button raised on-tap="reset">Reset</paper-button>
-      <paper-button raised on-tap="save">Save</paper-button>
-    </div>
-  
-  </template>
-  <script>
-    Polymer({
-      is: 'event-planner-editor',
-      properties: {
-        note: {
-          type: Object,
-          notify: true
-        },
-        opened: {
-          type: Boolean,
-          reflectToAttribute: true,
-          readOnly: true,
-          value: false
-        },
-      },
-      open: function(noteElement) {
-        this._setOpened(true);
-        this.__editedNoteElement = noteElement;
-        if (noteElement) {
-          noteElement.style.opacity = 0;
-          this.transitionInFrom(noteElement.getBoundingClientRect());
-        } else {
-          this.create();
-        }
-      },
-      create: function() {
-        this._setOpened(true);
-        this.note = { title: '', host: '', eventtype: '', startdate: '', enddate: '', location: '', guesttitle: '', guestlist: '' };
-        this.transitionInFrom(this.getBoundingClientRect());
-      },
-      save: function() {
-        var formSubmit = eventForm.validate();
-        if (formSubmit === true) {
-          console.log('Valid event!');
-          this.close('save');
-        }
-        else if (formSubmit === false){
-          console.log('Invalid event!');
-        }
-      },
-      reset: function (){
-        eventForm.reset();
-      },
-      delete: function() {
-        this.close('delete');
-      },
-      close: function(detail) {
-        if (this.__editedNoteElement) {
-          this.__editedNoteElement.style.opacity = 1;
-          this.__editedNoteElement = null;
-        }
-        this.fire('close', detail, { bubbles: false });
-        this.transitionOut().then(function() {
-          Polymer.dom(this).classList.remove('open');
-          this._setOpened(false);
-        }.bind(this));
-      },
-      submit: function (){
-        this.fire('submit', null, { bubbles: false });
-      },
-      transitionInFrom: function(rect) {
-        var targetRect = this.getBoundingClientRect();
-        var targetLeft = targetRect.width > 500 ?
-            targetRect.width / 2 - 240 : 10;
-        var targetWidth = targetRect.width > 500 ?
-            '480px' : 'calc(100vw - 20px)'
-        var noteAnimation = this.$.note.animate([{
-          transform: `translate(${rect.left}px,${rect.top - 46}px)`,
-          width: `${rect.width}px`,
-          easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
-        }, {
-          transform: `translate(${targetLeft}px, 0px)`,
-          width: targetWidth
-        }], 500);
-        var backgroundAnimation = this.$.background.animate([{
-          transform: `translate(${rect.left + rect.width / 2 - 128}px, ${rect.top - 46 + rect.height / 2 - 128}px) scale(0.1)`,
-          easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
-        }, {
-          transform: `scale(${targetRect.width / 256 * 4})`
-        }], 800);
-        noteAnimation.addEventListener('finish', function() {
-          Polymer.dom(this).classList.add('open');
-        }.bind(this));
-      },
-      transitionOut: function() {
-        var animation = this.animate([{
-          opacity: 1,
-          easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
-        }, {
-          opacity: 0
-        }], 300);
-        this.$.note.animate([{
-          transform: 'translateY(0) scale(1)',
-          opacity: 1,
-          easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
-        }, {
-          transform: 'translateY(10px) scale(0.9)',
-          opacity: 0
-        }], 500);
-        return new Promise(function(resolve) {
-          animation.addEventListener('finish', resolve);
-        }.bind(this));
-      }
+    <template>
+        <style>
+            :host {
+                display: none;
+                position: absolute;
+                overflow: hidden;
+                top: 46px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1;
+                min-height: 110%;
+                height: auto;
+            }
 
-    });
-  </script>
+            :host([opened]) {
+                display: block;
+            }
+
+            :host(.open) {
+                background-color: rgb(255, 98, 0);
+            }
+
+            paper-button {
+                color: var(--paper-purple-50);
+            }
+
+            #background {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 10px;
+                border-radius: 512px;
+                width: 190px;
+                height: 190px;
+                background-image: url("img/inside.png");
+                background-color: rgb(255, 255, 255);
+                transform-origin: 128px 128px;
+            }
+
+            event-planner {
+                display: block;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+            }
+
+            :host(.open) event-planner {
+                position: relative;
+                margin: auto;
+                width: calc(100vw - 20px);
+                max-width: 480px;
+            }
+
+            .controls {
+                display: block;
+                position: relative;
+                margin: 10px auto;
+                width: calc(100vw - 20px);
+                max-width: 480px;
+                @apply(--layout-horizontal);
+                @apply(--layout-center);
+                justify-content: space-between;
+                transition: opacity 0.3s;
+                opacity: 0;
+            }
+
+            :host(.open) .controls {
+                opacity: 1;
+            }
+
+            .event-planner-editor {
+                text-align: left;
+            }
+
+            @media screen and (max-width: 750px) {
+                #note {
+                    padding: 0 20px 1px 20px;
+                }
+            }
+        </style>
+        <div id="background"></div>
+        <event-planner id="note" title="{{note.title}}" host="{{note.host}}" eventtype="{{note.eventtype}}"
+                       startdate="{{note.startdate}}" enddate="{{note.enddate}}" location="{{note.location}}"
+                       guestmessage="{{note.guestmessage}}" guestlist="{{note.guestlist}}" editable></event-planner>
+        <div class="controls">
+            <paper-button raised on-tap="delete">Delete</paper-button>
+            <paper-button raised on-tap="reset">Reset</paper-button>
+            <paper-button raised on-tap="save">Save</paper-button>
+        </div>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'event-planner-editor',
+            properties: {
+                note: {
+                    type: Object,
+                    notify: true
+                },
+                opened: {
+                    type: Boolean,
+                    reflectToAttribute: true,
+                    readOnly: true,
+                    value: false
+                },
+            },
+            open: function (noteElement) {
+                this._setOpened(true);
+                this.__editedNoteElement = noteElement;
+                if (noteElement) {
+                    noteElement.style.opacity = 0;
+                    this.transitionInFrom(noteElement.getBoundingClientRect());
+                } else {
+                    this.create();
+                }
+            },
+            create: function () {
+                this._setOpened(true);
+                this.note = {
+                    title: '',
+                    host: '',
+                    eventtype: '',
+                    startdate: '',
+                    enddate: '',
+                    location: '',
+                    guesttitle: '',
+                    guestlist: ''
+                };
+                this.transitionInFrom(this.getBoundingClientRect());
+            },
+            save: function () {
+                var formSubmit = eventForm.validate();
+                if (formSubmit === true) {
+                    console.log('Valid event!');
+                    this.close('save');
+                }
+                else if (formSubmit === false) {
+                    console.log('Invalid event!');
+                }
+            },
+            reset: function () {
+                eventForm.reset();
+            },
+            delete: function () {
+                this.close('delete');
+            },
+            close: function (detail) {
+                if (this.__editedNoteElement) {
+                    this.__editedNoteElement.style.opacity = 1;
+                    this.__editedNoteElement = null;
+                }
+                this.fire('close', detail, {bubbles: false});
+                this.transitionOut().then(function () {
+                    Polymer.dom(this).classList.remove('open');
+                    this._setOpened(false);
+                }.bind(this));
+            },
+            submit: function () {
+                this.fire('submit', null, {bubbles: false});
+            },
+            transitionInFrom: function (rect) {
+                var targetRect = this.getBoundingClientRect();
+                var targetLeft = targetRect.width > 500 ?
+                    targetRect.width / 2 - 240 : 10;
+                var targetWidth = targetRect.width > 500 ?
+                    '480px' : 'calc(100vw - 20px)'
+                var noteAnimation = this.$.note.animate([{
+                    transform: `translate(${rect.left}px,${rect.top - 46}px)`,
+                    width: `${rect.width}px`,
+                    easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+                }, {
+                    transform: `translate(${targetLeft}px, 0px)`,
+                    width: targetWidth
+                }], 500);
+                var backgroundAnimation = this.$.background.animate([{
+                    transform: `translate(${rect.left + rect.width / 2 - 128}px, ${rect.top - 46 + rect.height / 2 - 128}px) scale(0.1)`,
+                    easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+                }, {
+                    transform: `scale(${targetRect.width / 256 * 4})`
+                }], 800);
+                noteAnimation.addEventListener('finish', function () {
+                    Polymer.dom(this).classList.add('open');
+                }.bind(this));
+            },
+            transitionOut: function () {
+                var animation = this.animate([{
+                    opacity: 1,
+                    easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+                }, {
+                    opacity: 0
+                }], 300);
+                this.$.note.animate([{
+                    transform: 'translateY(0) scale(1)',
+                    opacity: 1,
+                    easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+                }, {
+                    transform: 'translateY(10px) scale(0.9)',
+                    opacity: 0
+                }], 500);
+                return new Promise(function (resolve) {
+                    animation.addEventListener('finish', resolve);
+                }.bind(this));
+            }
+
+        });
+    </script>
 </dom-module>

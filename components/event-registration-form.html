@@ -1,270 +1,301 @@
-
 <dom-module id="event-registration-form">
-<template>
-<style>
-body {
-  font-family: 'Roboto', 'Noto', sans-serif;
-  font-size: 14px;
-  background-color: #FAFAFA;
-  margin: 0;
-}
+    <template>
+        <style>
+            body {
+                font-family: 'Roboto', 'Noto', sans-serif;
+                font-size: 14px;
+                background-color: #FAFAFA;
+                margin: 0;
+            }
 
-.card {
-  background: #FFFFFF;
-  max-width: 400px;
-  padding: 24px;
-  margin: 40px auto;
-}
-paper-progress {
-  width: 100% !important;
-  position: fixed;
-  z-index: 999;
-  --paper-progress-transition-duration: 0.08s;
-  --paper-progress-transition-timing-function: ease;
-  --paper-progress-transition-transition-delay: 0s;
-}
-paper-progress.transiting.x-scope.paper-progress-0 {width: 100%;}
+            .card {
+                background: #FFFFFF;
+                max-width: 400px;
+                padding: 24px;
+                margin: 40px auto;
+            }
 
-.paper-progress-0 #progressContainer.paper-progress, .paper-progress-0 .indeterminate.paper-progress::after {
-    height: 25px;
-}
-.paper-progress-0 #primaryProgress.paper-progress {
-    background: #4CAF50;
-}
-#progressContainer {
-    height: 25px !important;
-}
-section {
-  margin: 20px;
-}
+            paper-progress {
+                width: 100% !important;
+                position: fixed;
+                z-index: 999;
+                --paper-progress-transition-duration: 0.08s;
+                --paper-progress-transition-timing-function: ease;
+                --paper-progress-transition-transition-delay: 0s;
+            }
 
-a, a:hover {
-  text-decoration: none;
-}
+            paper-progress.transiting.x-scope.paper-progress-0 {
+                width: 100%;
+            }
 
-iron-toolbar {
-  background-color: #455ede;
-  box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.2);
-  color: #fff;
-  font-size: 20px;
-  font-weight: 400;
-  margin-bottom: 1.5em;
-}
-paper-toolbar.tall {
-    display: block;
-    background-color: #4285f4;
-    padding: 25px;
-    color: #fff;
-    text-align: center;
-}.cart-content.checkout-form
-paper-button {
-  margin: 0.5em 1em 0.5em 0;
-  width: 10em;
-}
+            .paper-progress-0 #progressContainer.paper-progress, .paper-progress-0 .indeterminate.paper-progress::after {
+                height: 25px;
+            }
 
-paper-button[right] {
-  position: fixed;
-  right: 0;
-}
+            .paper-progress-0 #primaryProgress.paper-progress {
+                background: #4CAF50;
+            }
 
-paper-checkbox {
-  margin-left: 1em;
-}
+            #progressContainer {
+                height: 25px !important;
+            }
 
-paper-fab {
-  position: absolute !important;
-  top: 35px;
-  right: 1em;
-  z-index: 1;
-}
+            section {
+                margin: 20px;
+            }
 
-paper-tabs {
-  background-color: #5677fc;
-  color: #fff;
-}
+            a, a:hover {
+                text-decoration: none;
+            }
 
-paper-tabs paper-tab.iron-selected {
-  color: #ffff8d;
-}
+            iron-toolbar {
+                background-color: #455ede;
+                box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.2);
+                color: #fff;
+                font-size: 20px;
+                font-weight: 400;
+                margin-bottom: 1.5em;
+            }
 
-/* paper progress bar styles */
---paper-progress-height {
-  height: 10px;
-}
-#progress-normal.inactive {
-    height: 0;
-    opacity: 0;
-    -webkit-transition: ease all 1s;
-    transition: ease all 1s;
-}
+            paper-toolbar.tall {
+                display: block;
+                background-color: #4285f4;
+                padding: 25px;
+                color: #fff;
+                text-align: center;
+            }
 
-#progress-diff-address.active {
-    opacity: 1;
-    height: auto;
-    -webkit-transition: ease all 1s;
-    transition: all ease 1s;
-}
+            .cart-content.checkout-form
+            paper-button {
+                margin: 0.5em 1em 0.5em 0;
+                width: 10em;
+            }
 
-#progress-diff-address {
-    opacity: 0;
-    height: 0;
-    -webkit-transition: ease all 1s;
-    transition: all ease 1s;
-}
+            paper-button[right] {
+                position: fixed;
+                right: 0;
+            }
 
-#progress-normal {
-    height: auto;
-    opacity: 1;
-    -webkit-transition: ease all 1s;
-    transition: ease all 1s;
-}
+            paper-checkbox {
+                margin-left: 1em;
+            }
 
-#progress-diff-address #primaryProgress {
-    background: #FF9800;
-}
-  :host {
-    display: block;
-  }
-  .form-title {
-    margin-bottom: 20px;
-  }
-  .avatar {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: #3367d6;
-    margin-right: 20px;
-  }
-  .company {
-    color: #3367d6;
-    font-size: 20px;
-    font-weight: 200;
-  }
-  gold-cc-expiration-input {
-  width: 50%;
-  margin-right: 20px;
-	}
-  paper-button {
-  background-color: #4285f4;
-  color: #fff;
-  margin-top: 50px;
-  width: 100%;
-	}
-	.cart-content {
-    width: 33%;
-    float: left;
-    text-align: center;
-}
-fieldset.style-scope.checkout-form {
-    border: 0;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-}
-  paper-checkbox.blue {
-    --paper-checkbox-checked-color: var(--paper-blue-500);
-    --paper-checkbox-checked-ink-color: var(--paper-blue-500);
-    --paper-checkbox-unchecked-color: var(--paper-blue-900);
-    --paper-checkbox-unchecked-ink-color: var(--paper-blue-900);
-    --paper-checkbox-label-color: var(--paper-blue-500);
-    --paper-checkbox-label-checked-color: var(--paper-blue-900);
-  }
-  .paper-checkbox-1 {
-    margin: 11px 0 0 0;
-}
-#diff-address-container.active {
-    display: block;
-    opacity: 1;
-    height: auto;
-    -webkit-transition: ease all 1s;
-    transition: ease all 1s;
-}
+            paper-fab {
+                position: absolute !important;
+                top: 35px;
+                right: 1em;
+                z-index: 1;
+            }
 
-#diff-address-container {
-    display: block;
-    opacity: 0;
-    height: 0;
-    -webkit-transition: ease all 0.1s;
-    transition: ease all 0.1s;
-}
-.paper-button-0 {
-    margin-top: 0 !important;
-}
+            paper-tabs {
+                background-color: #5677fc;
+                color: #fff;
+            }
 
-#diff-address-container h2 {
-    margin-top: 0;
-}
+            paper-tabs paper-tab.iron-selected {
+                color: #ffff8d;
+            }
 
-</style>
-  <form is="iron-form" id="form">
-		<fieldset>
-       <h2>Register your user account by adding the following information</h2>
-	       <paper-input id="user-name" name="name" label="What's your Username?" required autocomplete="name" aria-disabled="false" autofocus bind-value="{[username]}" error-message="Please enter your name correctly"></paper-input>
-         <paper-input id="email" name="email" label="Please enter your email" required autocomplete="name" aria-disabled="false" bind-value="{[useremail]}" error-message="Please enter a valid Email Address"></paper-input>
-         <paper-input id="password" name="password" label="Please enter your password" required autocomplete="name" aria-disabled="false" bind-value="{[userpassword]}" pattern="" error-message="Please enter a valid password">
-         </paper-input>
+            /* paper progress bar styles */
+            --paper-progress-height {
+                height: 10px;
+            }
 
-         <!--
-          commenting second password out until registration working
-          <paper-input id="password-confirm" name="password-confirm" label="Please enter your password" required autocomplete="name" aria-disabled="false"></paper-input>-->
-    </fieldset>
-     <fieldset id="diff-address-container">
-      <h2>Enter additional personal information (optional)</h2>
-      <paper-input id="user-diffname" name="name" label="Ship to a different name?" autocomplete="name" aria-disabled="false"></paper-input>
-      <paper-input id="diff-geo-address" onFocus="geolocate" type="text" autocomplete="street-address"></paper-input>
-    </fieldset>
-  	<paper-button on-tap="_clearfields">Clear fields</paper-button>
-    <paper-button on-tap="_register">Register</paper-button>
-    <paper-button on-tap="_createUser">Register</paper-button>
+            #progress-normal.inactive {
+                height: 0;
+                opacity: 0;
+                -webkit-transition: ease all 1s;
+                transition: ease all 1s;
+            }
 
-  </form>
-</template>
+            #progress-diff-address.active {
+                opacity: 1;
+                height: auto;
+                -webkit-transition: ease all 1s;
+                transition: all ease 1s;
+            }
 
-  <script>
-Polymer({
+            #progress-diff-address {
+                opacity: 0;
+                height: 0;
+                -webkit-transition: ease all 1s;
+                transition: all ease 1s;
+            }
 
-  is: 'event-registration-form',
-  properties: {
-    username: {
-      type: String,
-      notify: true,
-      value: ''
-    },
-    useremail: {
-      type: String,
-      notify: true,
-      value: ''
-    },
-    userpassword: {
-      type: String,
-      notify: true,
-      value: ''
-    },   
-    account: {
-      type: Object,
-      observer: 'userChange'
-    }
-  },
-  listeners: {
-    'form.iron-form-submit': '_handleFormSubmit'
-  },
-  _submit: function() {
-    this.$.form.submit();
-  },
-  _handleFormSubmit: function() {
-    console.log('Form submitted successfully! You are so rich now!');
-  },
+            #progress-normal {
+                height: auto;
+                opacity: 1;
+                -webkit-transition: ease all 1s;
+                transition: ease all 1s;
+            }
 
-  
-  // clears form fields
-  _clearfields: function (){
+            #progress-diff-address #primaryProgress {
+                background: #FF9800;
+            }
 
-  },
-  // based function where user change events will go
-  _userChange: function(){  },
+            :host {
+                display: block;
+            }
 
-});
-  </script>
+            .form-title {
+                margin-bottom: 20px;
+            }
+
+            .avatar {
+                display: inline-block;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                overflow: hidden;
+                background: #3367d6;
+                margin-right: 20px;
+            }
+
+            .company {
+                color: #3367d6;
+                font-size: 20px;
+                font-weight: 200;
+            }
+
+            gold-cc-expiration-input {
+                width: 50%;
+                margin-right: 20px;
+            }
+
+            paper-button {
+                background-color: #4285f4;
+                color: #fff;
+                margin-top: 50px;
+                width: 100%;
+            }
+
+            .cart-content {
+                width: 33%;
+                float: left;
+                text-align: center;
+            }
+
+            fieldset.style-scope.checkout-form {
+                border: 0;
+                margin-bottom: 15px;
+                padding-bottom: 15px;
+            }
+
+            paper-checkbox.blue {
+                --paper-checkbox-checked-color: var(--paper-blue-500);
+                --paper-checkbox-checked-ink-color: var(--paper-blue-500);
+                --paper-checkbox-unchecked-color: var(--paper-blue-900);
+                --paper-checkbox-unchecked-ink-color: var(--paper-blue-900);
+                --paper-checkbox-label-color: var(--paper-blue-500);
+                --paper-checkbox-label-checked-color: var(--paper-blue-900);
+            }
+
+            .paper-checkbox-1 {
+                margin: 11px 0 0 0;
+            }
+
+            #diff-address-container.active {
+                display: block;
+                opacity: 1;
+                height: auto;
+                -webkit-transition: ease all 1s;
+                transition: ease all 1s;
+            }
+
+            #diff-address-container {
+                display: block;
+                opacity: 0;
+                height: 0;
+                -webkit-transition: ease all 0.1s;
+                transition: ease all 0.1s;
+            }
+
+            .paper-button-0 {
+                margin-top: 0 !important;
+            }
+
+            #diff-address-container h2 {
+                margin-top: 0;
+            }
+
+        </style>
+        <form is="iron-form" id="form">
+            <fieldset>
+                <h2>Register your user account by adding the following information</h2>
+                <paper-input id="user-name" name="name" label="What's your Username?" required autocomplete="name"
+                             aria-disabled="false" autofocus bind-value="{[username]}"
+                             error-message="Please enter your name correctly"></paper-input>
+                <paper-input id="email" name="email" label="Please enter your email" required autocomplete="name"
+                             aria-disabled="false" bind-value="{[useremail]}"
+                             error-message="Please enter a valid Email Address"></paper-input>
+                <paper-input id="password" name="password" label="Please enter your password" required
+                             autocomplete="name" aria-disabled="false" bind-value="{[userpassword]}" pattern=""
+                             error-message="Please enter a valid password">
+                </paper-input>
+
+                <!--
+                 commenting second password out until registration working
+                 <paper-input id="password-confirm" name="password-confirm" label="Please enter your password" required autocomplete="name" aria-disabled="false"></paper-input>-->
+            </fieldset>
+            <fieldset id="diff-address-container">
+                <h2>Enter additional personal information (optional)</h2>
+                <paper-input id="user-diffname" name="name" label="Ship to a different name?" autocomplete="name"
+                             aria-disabled="false"></paper-input>
+                <paper-input id="diff-geo-address" onFocus="geolocate" type="text"
+                             autocomplete="street-address"></paper-input>
+            </fieldset>
+            <paper-button on-tap="_clearfields">Clear fields</paper-button>
+            <paper-button on-tap="_register">Register</paper-button>
+            <paper-button on-tap="_createUser">Register</paper-button>
+
+        </form>
+    </template>
+
+    <script>
+        Polymer({
+
+            is: 'event-registration-form',
+            properties: {
+                username: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                useremail: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                userpassword: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                account: {
+                    type: Object,
+                    observer: 'userChange'
+                }
+            },
+            listeners: {
+                'form.iron-form-submit': '_handleFormSubmit'
+            },
+            _submit: function () {
+                this.$.form.submit();
+            },
+            _handleFormSubmit: function () {
+                console.log('Form submitted successfully! You are so rich now!');
+            },
+
+
+            // clears form fields
+            _clearfields: function () {
+
+            },
+            // based function where user change events will go
+            _userChange: function () {
+            },
+
+        });
+    </script>
 
 </dom-module>
